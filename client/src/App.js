@@ -4,7 +4,7 @@ import axios from 'axios';
 function App() {
     const [clientes, setClientes] = useState([]);
     const [clientesFiltrados, setClientesFiltrados] = useState([]);
-    const [novoCliente, setNovoCliente] = useState({ nome: '', email: '', telefone: '', casa: '' });
+    const [novoCliente, setNovoCliente] = useState({ nome: '', email: '', telefone: '',casa: 0, x: 0, y: 0});
     const [filtro, setFiltro] = useState({ nome: '', email: '', telefone: '' });
 
     const handleInputChange = (e) => {
@@ -69,7 +69,9 @@ function App() {
                 <input type="text" name="nome" placeholder="Nome" onChange={handleInputChange} />
                 <input type="text" name="email" placeholder="Email" onChange={handleInputChange} />
                 <input type="text" name="telefone" placeholder="Telefone" onChange={handleInputChange} />
-                <input type="text" name="casa" placeholder="N° da Casa" onChange={handleInputChange} />
+                <input type="number" name="casa" placeholder="Casa" onChange={handleInputChange} />
+                <input type="number" name="x" placeholder="Coordenada X" onChange={handleInputChange} />
+                <input type="number" name="y" placeholder="Coordenada Y" onChange={handleInputChange} />
                 <button onClick={cadastrarCliente}>Cadastrar</button>
             </div>
 
@@ -84,7 +86,7 @@ function App() {
                 <h2>Lista de Clientes Filtrados</h2>
                 <ul>
                     {clientesFiltrados.map(cliente => (
-                        <li key={cliente.id}>{cliente.nome} - {cliente.email} - {cliente.telefone} - {cliente.casa}</li>
+                        <li key={cliente.id}>Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})</li>
                     ))}
                 </ul>
             </div>
@@ -93,7 +95,7 @@ function App() {
                 <h2>Lista Completa de Clientes</h2>
                 <ul>
                     {clientes.map(cliente => (
-                        <li key={cliente.id}>{cliente.nome} - {cliente.email} - {cliente.telefone} - {cliente.casa}</li>
+                        <li key={cliente.id}>Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})</li>
                     ))}
                 </ul>
             </div>
