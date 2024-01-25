@@ -60,7 +60,7 @@ function App() {
         } else {
             filtrarClientes();
         }
-    }, [filtro, clientes]);
+    }, [filtro, clientes, filtrarClientes]);
 
     return (
         <div>
