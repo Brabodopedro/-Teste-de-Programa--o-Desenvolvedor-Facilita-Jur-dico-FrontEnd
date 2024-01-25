@@ -4,8 +4,11 @@ import axios from 'axios';
 function App() {
     const [clientes, setClientes] = useState([]);
     const [clientesFiltrados, setClientesFiltrados] = useState([]);
-    const [novoCliente, setNovoCliente] = useState({ nome: '', email: '', telefone: '',casa: 0, x: 0, y: 0});
+    const [novoCliente, setNovoCliente] = useState({ nome: '', email: '', telefone: '', casa: 0, x: 0, y: 0 });
     const [filtro, setFiltro] = useState({ nome: '', email: '', telefone: '' });
+    const [modalAberta, setModalAberta] = useState(false);
+    const [ordemDeVisita, setOrdemDeVisita] = useState([]);
+    const [casasSelecionadas, setCasasSelecionadas] = useState([]); // Novo estado para armazenar as casas selecionadas
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -45,22 +48,38 @@ function App() {
 
     const limparFiltro = () => {
         setFiltro({ nome: '', email: '', telefone: '' });
-        // Limpa a lista de clientes filtrados
         setClientesFiltrados([]);
     };
+
+    const calcularRota = () => {
+      const casasArray = casasSelecionadas.split(',').map(Number);
+      
+      axios.post('http://localhost:3001/calcula-rota', { casas: casasArray })
+          .then(response => {
+              setOrdemDeVisita(response.data);
+              setModalAberta(true);
+          })
+          .catch(error => {
+              console.error('Erro ao calcular rota:', error);
+          });
+  };
+  
 
     useEffect(() => {
         listarClientes();
     }, []);
 
     useEffect(() => {
-        // Quando o filtro é limpo, reexibe todos os clientes
         if (filtro.nome === '' && filtro.email === '' && filtro.telefone === '') {
             setClientesFiltrados([]);
         } else {
             filtrarClientes();
         }
     }, [filtro, clientes, filtrarClientes]);
+
+    const handleModalClose = () => {
+        setModalAberta(false);
+    };
 
     return (
         <div>
@@ -82,11 +101,14 @@ function App() {
                 <input type="text" placeholder="Filtrar por Telefone" value={filtro.telefone} onChange={(e) => setFiltro({ ...filtro, telefone: e.target.value })} />
                 <button onClick={limparFiltro}>Limpar Filtro</button>
             </div>
+
             <div>
                 <h2>Lista de Clientes Filtrados</h2>
                 <ul>
                     {clientesFiltrados.map(cliente => (
-                        <li key={cliente.id}>Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})</li>
+                        <li key={cliente.id}>
+                            Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})
+                        </li>
                     ))}
                 </ul>
             </div>
@@ -95,10 +117,44 @@ function App() {
                 <h2>Lista Completa de Clientes</h2>
                 <ul>
                     {clientes.map(cliente => (
-                        <li key={cliente.id}>Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})</li>
+                        <li key={cliente.id}>
+                            Nome: {cliente.nome} -Email: {cliente.email} -Tel: {cliente.telefone} - Casa: {cliente.casa} - ({cliente.x}, {cliente.y})
+                        </li>
                     ))}
                 </ul>
+                <div>
+                  {/* Novo campo para inserir casas selecionadas */}
+                  <h2>Selecionar Casas para Rota</h2>
+                  <input
+                      type="text"
+                      placeholder="Insira as casas (separadas por vírgula)"
+                      value={casasSelecionadas}
+                      onChange={(e) => setCasasSelecionadas(e.target.value)}
+                  />
+                  <button onClick={() => calcularRota()}>Calcular Rota</button>
+              </div>
             </div>
+
+            {modalAberta && (
+              <div className="modal">
+                <div className="modal-content">
+                  <span className="close" onClick={handleModalClose}>&times;</span>
+                  <h2>Ordem de Visita</h2>
+                  <ul>
+                    {ordemDeVisita.map((clienteId, index) => {
+                      const clienteSelecionado = clientes.find(cliente => cliente.id === clienteId);
+                      return (
+                        clienteSelecionado && (
+                          <li key={index}>
+                            {`Casa ${clienteSelecionado.casa}`}
+                          </li>
+                        )
+                      );
+                    })}
+                  </ul>
+                </div>
+              </div>
+            )}
         </div>
     );
 }
