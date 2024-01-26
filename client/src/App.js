@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Logo from "./img/condominio.jpg"
+import './styles.css';
 
 function App() {
     const [clientes, setClientes] = useState([]);
@@ -134,7 +136,6 @@ function App() {
                   <button onClick={() => calcularRota()}>Calcular Rota</button>
               </div>
             </div>
-
             {modalAberta && (
                 <div className="modal">
                     <div className="modal-content">
@@ -155,7 +156,11 @@ function App() {
                     </div>
                 </div>
                 )}
+                <h2></h2>
+                    <img style={{ width: 450, height: 300 }}S src={Logo} alt='Condomino da parte 2' title='Condomino da parte 2' />
+                <h2></h2>
         </div>
+        
     );
 }
 
