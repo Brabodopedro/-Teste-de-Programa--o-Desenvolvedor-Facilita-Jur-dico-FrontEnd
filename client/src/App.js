@@ -52,17 +52,17 @@ function App() {
     };
 
     const calcularRota = () => {
-      const casasArray = casasSelecionadas.split(',').map(Number);
-      
-      axios.post('http://localhost:3001/calcula-rota', { casas: casasArray })
-          .then(response => {
-              setOrdemDeVisita(response.data);
-              setModalAberta(true);
-          })
-          .catch(error => {
-              console.error('Erro ao calcular rota:', error);
-          });
-  };
+        const casasArray = casasSelecionadas.split(',').map(Number);
+        
+        axios.post('http://localhost:3001/calcula-rota', { casas: casasArray })
+            .then(response => {
+                setOrdemDeVisita(response.data);
+                setModalAberta(true);
+            })
+            .catch(error => {
+                console.error('Erro ao calcular rota:', error);
+            });
+      };
   
 
     useEffect(() => {
@@ -136,25 +136,25 @@ function App() {
             </div>
 
             {modalAberta && (
-              <div className="modal">
-                <div className="modal-content">
-                  <span className="close" onClick={handleModalClose}>&times;</span>
-                  <h2>Ordem de Visita</h2>
-                  <ul>
-                    {ordemDeVisita.map((clienteId, index) => {
-                      const clienteSelecionado = clientes.find(cliente => cliente.id === clienteId);
-                      return (
-                        clienteSelecionado && (
-                          <li key={index}>
-                            {`Casa ${clienteSelecionado.casa}`}
-                          </li>
-                        )
-                      );
-                    })}
-                  </ul>
+                <div className="modal">
+                    <div className="modal-content">
+                    <span className="close" onClick={handleModalClose}>&times;</span>
+                    <h2>Ordem de Visita</h2>
+                    <ul>
+                        {ordemDeVisita.map((clienteId, index) => {
+                        const clienteSelecionado = clientes.find(cliente => cliente.id === clienteId);
+                        return (
+                            clienteSelecionado && (
+                            <li key={index}>
+                                {`Casa ${clienteSelecionado.casa}`}
+                            </li>
+                            )
+                        );
+                        })}
+                    </ul>
+                    </div>
                 </div>
-              </div>
-            )}
+                )}
         </div>
     );
 }
